@@ -13,3 +13,19 @@ output "asg_name" {
 output "elb_hostname" {
   value = "${aws_alb.main.dns_name}"
 }
+
+# return aws key and secret for Upload form
+output "uploads_user_aws_access_key_id" {
+    value = "${aws_iam_access_key.uploads_user.id}"
+}
+output "uploads_user_aws_secret_access_key" {
+    value = "${aws_iam_access_key.uploads_user.secret}"
+}
+
+# return aws key and secret for backup script
+output "backups_user_aws_access_key_id" {
+    value = "${aws_iam_access_key.backups_user.id}"
+}
+output "backups_user_aws_secret_access_key" {
+    value = "${aws_iam_access_key.backups_user.secret}"
+}

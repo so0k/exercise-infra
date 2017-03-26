@@ -1,18 +1,11 @@
 SHELL += -eu
 
 AWS_REGION ?= ap-southeast-1
-S3_BUCKET ?= singapore_univerisity_reports
-
-OWNER ?= vincent.drl@gmail.com
-INSTANCE_SIZE=t2.micro
-
-COREOS_CHANNEL ?= stable
-COREOS_VM_TYPE ?= hvm
-
+S3_CDN_BUCKET ?= so0k-cdn
+S3_UPLOADS_BUCKET ?= so0k-uploads
 CLUSTER_NAME ?= production
 
 AWS_EC2_KEY_NAME ?= ecs-$(CLUSTER_NAME)
-
 DIR_KEY_PAIR := .keypair
 
 init: create-keypair terraform.tfvars
@@ -44,16 +37,15 @@ delete-keypair:
 	fi;
 	@-rm -rf $(DIR_KEY_PAIR)/
 
-
-
 terraform.tfvars:
 	echo "## Generated using Makefile"
 	echo "aws_region = \"${AWS_REGION}\"" >$@
-	echo "tag_Owner = \"${OWNER}\"" >>$@
-	echo "key_name = \"${AWS_EC2_KEY_NAME}\"" >>$@
-	echo "instance_size = \"${INSTANCE_SIZE}\"" >>$@
-	echo "bucket_name = \"${S3_BUCKET}\"" >>$@
 	echo "cluster_name = \"${CLUSTER_NAME}\"" >>$@
-	IP=`curl --silent ifconfig.co` && echo "admin_cidr_ingress = \"$${IP}/32\" }" >>$@
+	echo "cdn_bucket = \"${S3_CDN_BUCKET}\"" >>$@
+	echo "uploads_bucket = \"${S3_UPLOADS_BUCKET}\"" >>$@
+	echo "key_name = \"${AWS_EC2_KEY_NAME}\"" >>$@
+	aws iam get-user --output text --query='User.Arn' | grep -Eo '[[:digit:]]{12}' \
+	 | xargs -I {} echo "aws_account_id = \"{}\"" >>$@
+	IP=`curl --silent ifconfig.co` && echo "admin_cidr_ingress = \"$${IP}/32\"" >>$@
 
 .PHONY: create-key-pair delete-key-pair init clean

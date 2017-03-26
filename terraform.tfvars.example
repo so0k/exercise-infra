@@ -1,0 +1,28 @@
+# *NEVER* check in this file to a repo if it has creds in it
+# source from an env variable.
+# export TF_VAR_aws_access_key, TF_var_aws_secret_key
+# aws_access_key = "AKIA...."
+# aws_secret_key = "x823dzzawer...."
+
+# set the region for the endpoints to be created
+aws_region = "ap-southeast-1"
+
+tag_Owner = "vincent.drl@gmail.com"
+
+# ssh key (use make create-keypair to create a new key)
+key_name = "ecs-production"
+cluster_name = "production"
+
+# Whitelist for the ELB, should you require one (comma separated)
+# elb_whitelist = "118.200.7.52/32"
+admin_cidr_ingress = "202.73.38.209/32"
+
+# Account id of AWS Account
+aws_account_id = "184117043575"
+
+# What instance size do you want these to be (might be restricted by the AMI)
+instance_type = "t2.micro"
+
+# Name for S3 buckets
+cdn_bucket = "so0k-cdn"
+uploads_bucket = "so0k-reports"
