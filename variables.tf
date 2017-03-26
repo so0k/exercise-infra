@@ -15,6 +15,10 @@ variable "aws_account_id" {
   description = "Id of AWS Account"
 }
 
+variable "nfs_host" {
+  description = "Host for NFS backups"
+}
+
 # Optional
 variable "aws_region" {
   description = "The AWS region to create things in."
