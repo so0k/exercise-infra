@@ -131,19 +131,41 @@ resource "aws_iam_user_policy" "backups_user" {
 {
     "Version": "2012-10-17",
     "Statement": [
-    {
-        "Effect": "Allow",
-        "Action": [
-          "s3:ListBucket",
-          "s3:GetObject*",
-          "s3:PutObject",
-          "s3:PutObjectAcl"
-        ],
-        "Resource": [
-            "arn:aws:s3:::${var.uploads_bucket}",
-            "arn:aws:s3:::${var.uploads_bucket}/*"
-        ]
-     }]
+        {
+            "Sid": "AllowListingOfAllBuckets",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*"
+            ]
+        },
+        {
+            "Sid": "AllowListingOfBucketContents",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.uploads_bucket}"
+            ]
+        },
+        {
+            "Sid": "AllowAccessToUploadBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListObjects",
+                "s3:GetObject*",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.uploads_bucket}/*"
+            ]
+        }
+    ]
 }
 EOF
 }

@@ -1,7 +1,7 @@
 # Document Upload Portal - Infra
 
 This is the Infrastructure as Code for a [sample Document Upload portal
-application](github.com/so0k/aws-uploads-sample).
+application](https://github.com/so0k/aws-uploads-sample).
 
 Tested on:
 ```
