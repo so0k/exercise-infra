@@ -80,7 +80,7 @@ data "template_file" "instance_profile" {
 }
 
 resource "aws_iam_role_policy" "instance" {
-  name   = "Ecs${title(var.cluster_name)}InstanceRole"
+  name   = "Ecs${var.cluster_name}InstanceRole"
   role   = "${aws_iam_role.app_instance.name}"
   policy = "${data.template_file.instance_profile.rendered}"
 }
@@ -104,7 +104,8 @@ resource "aws_iam_user_policy" "uploads_user" {
     {
         "Effect": "Allow",
         "Action": [
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:PutObjectAcl"
         ],
         "Resource": [
             "arn:aws:s3:::${var.uploads_bucket}/*"
