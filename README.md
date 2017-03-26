@@ -28,6 +28,15 @@ $ terraform plan
 $ terraform apply
 ```
 
+**NOTE**: On terraform 0.7 there is a known dependency issue with ECS roles due to the eventual consistency of IAM resulting in:
+```
+1 error(s) occurred:
+
+* aws_ecs_service.uploads: InvalidParameterException: Unable to assume role and validate the specified targetGroupArn.
+```
+
+running `terraform apply` a second time should complete without issue
+
 ## Clean up
 
 ```bash

@@ -200,8 +200,8 @@ resource "aws_security_group" "instance_sg" {
 
   ingress {
     protocol  = "tcp"
-    from_port = 8080
-    to_port   = 8080
+    from_port = 5000
+    to_port   = 5000
 
     security_groups = [
       "${aws_security_group.lb_sg.id}",
@@ -251,7 +251,7 @@ resource "aws_ecs_task_definition" "uploads" {
 resource "aws_ecs_service" "uploads" {
   name            = "ecs-uploads"
   cluster         = "${aws_ecs_cluster.main.id}"
-  task_definition = "${aws_ecs_task_definition.ghost.arn}"
+  task_definition = "${aws_ecs_task_definition.uploads.arn}"
   desired_count   = 1
   iam_role        = "${aws_iam_role.ecs_service.name}"
 
@@ -271,10 +271,14 @@ resource "aws_ecs_service" "uploads" {
 ## ALB
 
 resource "aws_alb_target_group" "app" {
-  name     = "tf-example-ecs-ghost"
+  name     = "ecs-uploads"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.main.id}"
+
+  health_check {
+    path   = "/upload/"
+  }
 }
 
 resource "aws_alb" "main" {
@@ -301,6 +305,6 @@ resource "aws_cloudwatch_log_group" "ecs" {
 }
 
 resource "aws_cloudwatch_log_group" "app" {
-  name = "ecs-${var.cluster_name}-group/app-ghost"
+  name = "ecs-${var.cluster_name}-group/app-uploads"
 }
 
