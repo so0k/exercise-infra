@@ -7,9 +7,27 @@
     "name": "${container_name}",
     "portMappings": [
       {
-        "containerPort": 2368,
-        "hostPort": 8080
+        "containerPort": 5000,
+        "hostPort": 5000
       }
+    ],
+    "environment": [
+        {
+            "name": "AWS_ACCESS_KEY_ID",
+            "value": "${upload_key}"
+        },
+        {
+            "name": "AWS_SECRET_ACCESS_KEY",
+            "value": "${upload_secret}"
+        },
+        {
+            "name": "S3_BUCKET",
+            "value": "${upload_bucket}"
+        },
+        {
+            "name": "S3_REGION",
+            "value": "${upload_region}"
+        }
     ],
     "logConfiguration": {
         "logDriver": "awslogs",

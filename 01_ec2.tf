@@ -232,20 +232,24 @@ data "template_file" "task_definition" {
   template = "${file("${path.module}/templates/task-definition.json")}"
 
   vars {
-    image_url        = "ghost:latest"
-    container_name   = "ghost"
+    image_url        = "so0k/aws-uploads-sample:latest"
+    container_name   = "uploads"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.app.name}"
+    upload_key       = "${aws_iam_access_key.uploads_user.id}"
+    upload_secret    = "${aws_iam_access_key.uploads_user.secret}"
+    upload_bucket    = "${var.uploads_bucket}"
+    upload_region    = "${var.aws_region}"
   }
 }
 
-resource "aws_ecs_task_definition" "ghost" {
-  family                = "tf_example_ghost_td"
+resource "aws_ecs_task_definition" "uploads" {
+  family                = "uploads_td"
   container_definitions = "${data.template_file.task_definition.rendered}"
 }
 
-resource "aws_ecs_service" "test" {
-  name            = "tf-example-ecs-ghost"
+resource "aws_ecs_service" "uploads" {
+  name            = "ecs-uploads"
   cluster         = "${aws_ecs_cluster.main.id}"
   task_definition = "${aws_ecs_task_definition.ghost.arn}"
   desired_count   = 1
@@ -253,8 +257,8 @@ resource "aws_ecs_service" "test" {
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.app.id}"
-    container_name   = "ghost"
-    container_port   = "2368"
+    container_name   = "uploads"
+    container_port   = "5000"
   }
 
   depends_on = [
