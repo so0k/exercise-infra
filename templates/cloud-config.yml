@@ -1,8 +1,23 @@
 #cloud-config
+write-files:
+  - path: /etc/conf.d/nfs
+    permissions: '0644'
+    content: |
+      OPTS_RPC_MOUNTD=""
 coreos:
   units:
    - name: update-engine.service
      command: stop
+   - name: rpc-statd.service
+     command: start
+     enable: true
+   - name: mnt-nfs-backups.mount
+     command: start
+     content: |
+       [Mount]
+       What=${nfs_host}:/var/nfs/backups
+       Where=/mnt/nfs/backups
+       Type=nfs
    - name: amazon-ecs-agent.service
      command: start
      runtime: true

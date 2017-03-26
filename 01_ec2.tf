@@ -106,6 +106,7 @@ data "template_file" "cloud_config" {
     ecs_log_level      = "info"
     ecs_agent_version  = "latest"
     ecs_log_group_name = "${aws_cloudwatch_log_group.ecs.name}"
+    nfs_host           = "${var.nfs_host}"
   }
 }
 
